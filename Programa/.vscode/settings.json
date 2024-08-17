@@ -1,6 +1,8 @@
 {
     "files.associations": {
         "*.s": "asm-intel-x86-generic",
-        "cjson.h": "c"
-    }
+        "cjson.h": "c",
+        "ejem_cJSON.C": "cpp"
+    },
+    "C_Cpp.default.compilerPath": "C:/msys64/bin/gcc.exe"
 }
