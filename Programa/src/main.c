@@ -17,29 +17,39 @@ void showMenu()
 int main() 
 { 
     int option;
+    char filename[256];  
+    Sale *sales = NULL;  
+    int totalSales = 0;  
+
     do {
         showMenu();
         scanf("%d", &option);
         switch (option) {
             case 1:
                 printf("Importacion de datos\n");
-                dataImport();
+                printf("Ingrese la ruta del archivo JSON: ");
+                scanf("%s", filename);
+                dataImport(filename, &sales, &totalSales);
+                printf("Datos importados correctamente. Total de ventas: %d\n", totalSales);
                 break;
             case 2:
                 printf("Procesamiento de datos\n");
-                dataProcessing();
+                dataProcessing(sales, &totalSales);
                 break;
             case 3:
                 printf("Analisis de datos\n");
-                dataAnalysis();
+                printf("Total de ventas: %.2f\n", totalVentas(sales, totalSales));
+                ventasMensualesYAnuales(sales, totalSales);
                 break;
             case 4:
                 printf("Analisis temporal\n");
-                temporalAnalysis();
+                analisisTemporal(sales, totalSales);
+                double tasa = calcularTasaCrecimiento(sales, totalSales, 2023, 1);
+                printf("Tasa de crecimiento en el primer trimestre de 2023: %.2f%%\n", tasa);
                 break;
             case 5:
                 printf("Estadisticas\n");
-                statistics();
+                mostrarTop5Categorias(sales, totalSales);
                 break;
             case 6:
                 printf("Saliendo...\n");
