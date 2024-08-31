@@ -4,7 +4,7 @@
 #include <time.h>
 #include "utils.h"
 
-void dataImport(const char *filename, Sale **sales, int *totalSales) {
+void importacionDatos(const char *filename, Sale **sales, int *totalSales) {
     FILE *file = fopen(filename, "r");
     if (file == NULL) {
         printf("Error al abrir el archivo: %s\n", filename);
@@ -69,13 +69,25 @@ void dataImport(const char *filename, Sale **sales, int *totalSales) {
     free(data);
 }
 
-// Funcion para calcular la media de un array de valores
-double calcularMedia(double *valores, int cantidad) {
-    double suma = 0.0;
-    for (int i = 0; i < cantidad; i++) {
-        suma += valores[i];
+
+void eliminarDuplicados(Sale *sales, int *totalSales) {
+    for (int i = 0; i < *totalSales; i++) {
+        for (int j = i + 1; j < *totalSales; j++) {
+            if (sales[i].venta_id == sales[j].venta_id) {
+                // Liberar memoria de la venta duplicada
+                free(sales[j].producto_nombre);
+                free(sales[j].categoria);
+
+                // Mover los elementos restantes hacia la izquierda
+                for (int k = j; k < *totalSales - 1; k++) {
+                    sales[k] = sales[k + 1];
+                }
+
+                (*totalSales)--;
+                j--;  // Para revisar el nuevo elemento en la posicion j
+            }
+        }
     }
-    return suma / cantidad;
 }
 
 // Funcion para calcular la moda de un array de valores enteros
@@ -100,27 +112,18 @@ int calcularModa(int *valores, int cantidad) {
     return moda;
 }
 
-void RemoveDuplicates(Sale *sales, int *totalSales) {
-    for (int i = 0; i < *totalSales; i++) {
-        for (int j = i + 1; j < *totalSales; j++) {
-            if (sales[i].venta_id == sales[j].venta_id) {
-                // Liberar memoria de la venta duplicada
-                free(sales[j].producto_nombre);
-                free(sales[j].categoria);
 
-                // Mover los elementos restantes hacia la izquierda
-                for (int k = j; k < *totalSales - 1; k++) {
-                    sales[k] = sales[k + 1];
-                }
-
-                (*totalSales)--;
-                j--;  // Para revisar el nuevo elemento en la posicion j
-            }
-        }
+// Funcion para calcular la media de un array de valores
+double calcularMedia(double *valores, int cantidad) {
+    double suma = 0.0;
+    for (int i = 0; i < cantidad; i++) {
+        suma += valores[i];
     }
+    return suma / cantidad;
 }
 
-void completeData(Sale *sales, int totalSales) {
+
+void completarDatos(Sale *sales, int totalSales) {
     int *cantidades = (int *)malloc(totalSales * sizeof(int));
     double *precios = (double *)malloc(totalSales * sizeof(double));
 
@@ -161,7 +164,7 @@ void completeData(Sale *sales, int totalSales) {
     free(precios);
 }
 
-void dataProcessing(Sale *sales, int *totalSales) {
+void procesarDatos(Sale *sales, int *totalSales) {
 
     if (sales == NULL || *totalSales == 0) {
         printf("No hay datos cargados para procesar.\n");
@@ -169,13 +172,14 @@ void dataProcessing(Sale *sales, int *totalSales) {
     }
 
     // Eliminar duplicados
-    RemoveDuplicates(sales, totalSales);
+    eliminarDuplicados(sales, totalSales);
     printf("Datos duplicados eliminados. Total de ventas despues de la limpieza: %d\n", totalSales);
 
     // Completar datos faltantes
-    completeData(sales, *totalSales);
+    completarDatos(sales, *totalSales);
     printf("Datos faltantes completados.\n");
 }
+
 
 double totalVentas(Sale *sales, int totalSales) {
     double total = 0.0;

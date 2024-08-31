@@ -4,7 +4,7 @@
 
 void showMenu() 
 {
-    printf("\n--- Sistema de Analisis de Datos de Ventas ---\n");
+    printf("\n--- Sistema de Analisis de Datos de Ventas gay ---\n");
     printf("1. Importacion de datos\n");
     printf("2. Procesamiento de datos\n");
     printf("3. Analisis de datos\n");
@@ -29,12 +29,12 @@ int main()
                 printf("Importacion de datos\n");
                 printf("Ingrese la ruta del archivo JSON: ");
                 scanf("%s", filename);
-                dataImport(filename, &sales, &totalSales);
+                importacionDatos(filename, &sales, &totalSales);
                 printf("Datos importados correctamente. Total de ventas: %d\n", totalSales);
                 break;
             case 2:
                 printf("Procesamiento de datos\n");
-                dataProcessing(sales, &totalSales);
+                procesarDatos(sales, &totalSales);
                 break;
             case 3:
                 printf("Analisis de datos\n");
