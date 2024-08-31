@@ -1,8 +1,30 @@
 #include<stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 #include <time.h>
 #include "utils.h"
+
+
+void mostrarDatosImportados(Sale *sales, int totalSales) {
+    printf("+-----------+------------+-------------+----------------+---------------+----------+----------------+---------+\n");
+    printf("| Venta ID  |   Fecha    | Producto ID | Nombre Producto|   Categoria   | Cantidad | Precio Unitario|  Total  |\n");
+    printf("+-----------+------------+-------------+----------------+---------------+----------+----------------+---------+\n");
+
+    for (int i = 0; i < totalSales; i++) {
+        printf("| %9d | %10s | %11d | %14s | %13s | %8d | %14.2f | %7.2f |\n",
+               sales[i].venta_id,
+               sales[i].fecha,
+               sales[i].producto_id,
+               sales[i].producto_nombre,
+               sales[i].categoria,
+               sales[i].cantidad,
+               sales[i].precio_unitario,
+               sales[i].total);
+    }
+
+    printf("+-----------+------------+-------------+----------------+---------------+----------+----------------+---------+\n");
+}
 
 void importacionDatos(const char *filename, Sale **sales, int *totalSales) {
     FILE *file = fopen(filename, "r");
@@ -67,27 +89,28 @@ void importacionDatos(const char *filename, Sale **sales, int *totalSales) {
 
     cJSON_Delete(json);
     free(data);
+
+    mostrarDatosImportados(*sales, *totalSales);
 }
 
 
 void eliminarDuplicados(Sale *sales, int *totalSales) {
-    for (int i = 0; i < *totalSales; i++) {
-        for (int j = i + 1; j < *totalSales; j++) {
+    int n = *totalSales;
+    for (int i = 0; i < n; i++) {
+        for (int j = i + 1; j < n;) {
             if (sales[i].venta_id == sales[j].venta_id) {
-                // Liberar memoria de la venta duplicada
-                free(sales[j].producto_nombre);
-                free(sales[j].categoria);
-
-                // Mover los elementos restantes hacia la izquierda
-                for (int k = j; k < *totalSales - 1; k++) {
+                printf("Duplicado encontrado: venta_id %d, eliminando registro duplicado.\n", sales[j].venta_id);
+                // Eliminar el duplicado desplazando los elementos hacia la izquierda
+                for (int k = j; k < n - 1; k++) {
                     sales[k] = sales[k + 1];
                 }
-
-                (*totalSales)--;
-                j--;  // Para revisar el nuevo elemento en la posicion j
+                n--;
+            } else {
+                j++;
             }
         }
     }
+    *totalSales = n;
 }
 
 // Funcion para calcular la moda de un array de valores enteros
@@ -189,46 +212,75 @@ double totalVentas(Sale *sales, int totalSales) {
     return total;
 }
 
+
+void agregarVenta(VentasAnuales **ventasAnuales, int *totalAnos, int ano, int mes, double total) {
+    for (int i = 0; i < *totalAnos; i++) {
+        if ((*ventasAnuales)[i].ano == ano) {
+            // Año encontrado, agregar o actualizar el mes
+            for (int j = 0; j < (*ventasAnuales)[i].totalMeses; j++) {
+                if ((*ventasAnuales)[i].ventasMensuales[j].mes == mes) {
+                    (*ventasAnuales)[i].ventasMensuales[j].totalVentas += total;
+                    return;
+                }
+            }
+            // Si el mes no se encontró, agregarlo
+            (*ventasAnuales)[i].ventasMensuales = (VentasMensuales *)realloc((*ventasAnuales)[i].ventasMensuales, ((*ventasAnuales)[i].totalMeses + 1) * sizeof(VentasMensuales));
+            (*ventasAnuales)[i].ventasMensuales[(*ventasAnuales)[i].totalMeses].mes = mes;
+            (*ventasAnuales)[i].ventasMensuales[(*ventasAnuales)[i].totalMeses].totalVentas = total;
+            (*ventasAnuales)[i].totalMeses++;
+            return;
+        }
+    }
+
+    // Si el año no se encontró, agregarlo
+    *ventasAnuales = (VentasAnuales *)realloc(*ventasAnuales, (*totalAnos + 1) * sizeof(VentasAnuales));
+    (*ventasAnuales)[*totalAnos].ano = ano;
+    (*ventasAnuales)[*totalAnos].ventasMensuales = (VentasMensuales *)malloc(sizeof(VentasMensuales));
+    (*ventasAnuales)[*totalAnos].ventasMensuales[0].mes = mes;
+    (*ventasAnuales)[*totalAnos].ventasMensuales[0].totalVentas = total;
+    (*ventasAnuales)[*totalAnos].totalMeses = 1;
+    (*totalAnos)++;
+}
+
+const char* obtenerNombreMes(int mes) {
+    const char* nombresMeses[] = {
+        "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", 
+        "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+    };
+    return nombresMeses[mes - 1];
+}
+
 void ventasMensualesYAnuales(Sale *sales, int totalSales) {
-    double ventasMensuales[12] = {0};
-    double ventasAnuales[100] = {0}; // Asume que manejas hasta 100 anos distintos como maximo
-    int anos[100] = {0}; // Almacenar los anos distintos encontrados
+    VentasAnuales *ventasAnuales = NULL;
     int totalAnos = 0;
 
     for (int i = 0; i < totalSales; i++) {
-        int mes = atoi(&sales[i].fecha[5]) - 1; // Extraer el mes
-        int ano = atoi(&sales[i].fecha[0]); // Extraer el ano
+        int mes = atoi(&sales[i].fecha[5]); // Extraer el mes (sin -1 para representar el mes real)
+        int ano = atoi(&sales[i].fecha[0]); // Extraer el año
+        double total = sales[i].total;
 
-        ventasMensuales[mes] += sales[i].total;
-
-        // Buscar si el ano ya esta registrado
-        int anoIndex = -1;
-        for (int j = 0; j < totalAnos; j++) {
-            if (anos[j] == ano) {
-                anoIndex = j;
-                break;
-            }
-        }
-
-        // Si no lo esta, agregarlo
-        if (anoIndex == -1) {
-            anos[totalAnos] = ano;
-            ventasAnuales[totalAnos] = sales[i].total;
-            totalAnos++;
-        } else {
-            ventasAnuales[anoIndex] += sales[i].total;
-        }
+        agregarVenta(&ventasAnuales, &totalAnos, ano, mes, total);
     }
 
-    printf("\nVentas Mensuales:\n");
-    for (int i = 0; i < 12; i++) {
-        printf("Mes %d: %.2f\n", i + 1, ventasMensuales[i]);
-    }
-
-    printf("\nVentas Anuales:\n");
+    // Impresión de los resultados
+    printf("\nVentas Anuales y Mensuales:\n");
     for (int i = 0; i < totalAnos; i++) {
-        printf("Ano %d: %.2f\n", anos[i], ventasAnuales[i]);
+        double totalAnual = 0.0;
+        printf("\nAno %d:\n", ventasAnuales[i].ano);
+        for (int j = 0; j < ventasAnuales[i].totalMeses; j++) {
+            const char* nombreMes = obtenerNombreMes(ventasAnuales[i].ventasMensuales[j].mes);
+            double totalMensual = ventasAnuales[i].ventasMensuales[j].totalVentas;
+            printf("  %s: %.2f\n", nombreMes, totalMensual);
+            totalAnual += totalMensual;
+        }
+        printf("  Total del ano %d: %.2f\n", ventasAnuales[i].ano, totalAnual);
     }
+
+    // Liberar memoria
+    for (int i = 0; i < totalAnos; i++) {
+        free(ventasAnuales[i].ventasMensuales);
+    }
+    free(ventasAnuales);
 }
 
 

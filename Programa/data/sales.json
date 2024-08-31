@@ -3,8 +3,8 @@
         "venta_id": 1,
         "fecha": "2023-01-04",
         "producto_id": 109,
-        "producto_nombre": "Cámara",
-        "categoria": "Electrónica",
+        "producto_nombre": "Camara",
+        "categoria": "Electronica",
         "cantidad": 2,
         "precio_unitario": 250.0,
         "total": 500.0
@@ -13,8 +13,8 @@
         "venta_id": 2,
         "fecha": "2023-01-12",
         "producto_id": 106,
-        "producto_nombre": "Teléfono",
-        "categoria": "Electrónica",
+        "producto_nombre": "Telefono",
+        "categoria": "Electronica",
         "cantidad": 1,
         "precio_unitario": 500.0,
         "total": 500.0
@@ -24,7 +24,7 @@
         "fecha": "2023-02-01",
         "producto_id": 205,
         "producto_nombre": "Laptop",
-        "categoria": "Computación",
+        "categoria": "Computacion",
         "cantidad": 1,
         "precio_unitario": 800.0,
         "total": 800.0
@@ -34,14 +34,14 @@
         "fecha": "2023-02-10",
         "producto_id": 202,
         "producto_nombre": "Tablet",
-        "categoria": "Computación",
+        "categoria": "Computacion",
         "cantidad": 3,
         "precio_unitario": 300.0,
         "total": 900.0
     },
     {
         "venta_id": 5,
-        "fecha": "2023-03-05",
+        "fecha": "2024-03-05",
         "producto_id": 301,
         "producto_nombre": "Impresora",
         "categoria": "Oficina",
@@ -51,7 +51,7 @@
     },
     {
         "venta_id": 6,
-        "fecha": "2023-03-15",
+        "fecha": "2024-03-15",
         "producto_id": 405,
         "producto_nombre": "Escritorio",
         "categoria": "Muebles",

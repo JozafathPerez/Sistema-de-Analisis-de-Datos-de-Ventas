@@ -28,6 +28,20 @@ typedef struct {
     double total;
 } Sale;
 
+typedef struct {
+    int mes;
+    double totalVentas;
+} VentasMensuales;
+
+typedef struct {
+    int ano;
+    VentasMensuales *ventasMensuales; // Array dinámico de ventas mensuales
+    int totalMeses;
+} VentasAnuales;
+
+
+void mostrarDatosImportados(Sale *sales, int totalSales);
+
 /*****Nombre***************************************
  * importacionDatos
  *****Descripción**********************************
@@ -148,6 +162,10 @@ void procesarDatos(Sale *sales, int *totalSales);
 **************************************************/
 double totalVentas(Sale *sales, int totalSales);
 
+void agregarVenta(VentasAnuales **ventasAnuales, int *totalAnos, int ano, int mes, double total);
+
+const char* obtenerNombreMes(int mes);
+
 /*****Nombre***************************************
  * ventasMensualesYAnuales
  *****Descripción**********************************
@@ -178,7 +196,7 @@ void ventasMensualesYAnuales(Sale *sales, int totalSales);
 * - tm: Puntero a una estructura `tm` que será llenada con los componentes 
 *   de la fecha.
 **************************************************/
-void parseFecha(const char *fecha, struct tm *tm);
+// void parseFecha(const char *fecha, struct tm *tm);
 
 /*****Nombre***************************************
  * analisisTemporal
