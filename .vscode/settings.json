@@ -1,6 +1,8 @@
 {
     "files.associations": {
         "*.s": "asm-intel-x86-generic",
-        "utils.h": "c"
+        "utils.h": "c",
+        "headers.h": "c",
+        "cjson.h": "c"
     }
 }

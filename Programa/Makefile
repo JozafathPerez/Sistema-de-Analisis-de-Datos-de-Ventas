@@ -3,7 +3,7 @@ CC = gcc
 CFLAGS = -lm
 
 # Definir los archivos fuente y el ejecutable
-SRC = ./src/main.c ./lib/cJSON/cJSON.c ./src/utils.c
+SRC = ./src/main.c ./lib/cJSON/cJSON.c ./src/utils.c ./src/importing.c ./src/processing.c ./src/analysis.c ./src/temporary.c ./src/statistics.c ./src/leave.c 
 TARGET = main.exe
 
 # Regla principal

@@ -1,6 +1,6 @@
 #include <stdio.h> 
 #include "../lib/cJSON/cJSON.h" 
-#include "./utils.h"
+#include "./headers.h"
 
 void showMenu() 
 {
@@ -16,6 +16,11 @@ void showMenu()
     printf("---------------------------------\n");
     printf("Seleccione una opcion: ");    
 }
+
+void clearB() {
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF);
+}
   
 int main() 
 { 
@@ -26,7 +31,14 @@ int main()
 
     do {
         showMenu();
-        scanf("%d", &option);
+        if (scanf("%d", &option) != 1) {
+            printf("\nEntrada invalida. Por favor, ingrese una opcion valida del 1 a 6.\n");
+            clearB();
+            continue; 
+            }
+
+        clearB();
+
         switch (option) {
             case 1:
                 printf("\n-------------------------------\n");
@@ -57,7 +69,7 @@ int main()
                 printf("-------------------------------\n");
                 analisisTemporal(sales, totalSales);
                 double tasa = calcularTasaCrecimiento(sales, totalSales, 2023, 1);
-                printf("Tasa de crecimiento en el primer trimestre de 2023: %.2f%%\n", tasa);
+                printf("\nTasa de crecimiento en el primer trimestre de 2023: %.2f%%\n", tasa);
                 break;
             case 5:
                 printf("\n-------------------------------\n");
@@ -77,5 +89,6 @@ int main()
                 break;
         }
     } while (option != 6);
+
     return 0;
 }

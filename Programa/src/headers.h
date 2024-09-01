@@ -12,10 +12,15 @@
 **************************************************/
 
 
-#ifndef UTILS_H
-#define UTILS_H
+#ifndef HEADERS_H
+#define HEADERS_H
 
 #include "../lib/cJSON/cJSON.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdbool.h>
+#include <time.h>
 
 typedef struct {
     short int venta_id;
@@ -39,8 +44,17 @@ typedef struct {
     int totalMeses;
 } VentasAnuales;
 
+typedef struct {
+    char *categoria;
+    double totalVentas;
+} CategoriaTotal;
+
 
 void mostrarDatosImportados(Sale *sales, int totalSales);
+
+char* leerArchivo(const char *filename);
+
+void parseJSON(const char *data, Sale **sales, int *totalSales);
 
 /*****Nombre***************************************
  * importacionDatos
@@ -165,6 +179,8 @@ double totalVentas(Sale *sales, int totalSales);
 void agregarVenta(VentasAnuales **ventasAnuales, int *totalAnos, int ano, int mes, double total);
 
 const char* obtenerNombreMes(int mes);
+
+const char* obtenerNombreDia(int dia);
 
 /*****Nombre***************************************
  * ventasMensualesYAnuales
