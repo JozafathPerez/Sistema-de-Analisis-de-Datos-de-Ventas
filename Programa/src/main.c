@@ -28,6 +28,8 @@ int main()
     char filename[256];  
     Sale *sales = NULL;  
     int totalSales = 0;  
+    
+    importacionDatos("./data/sales.json", &sales, &totalSales);
 
     do {
         showMenu();
@@ -81,6 +83,13 @@ int main()
                 printf("\n-------------------------------\n");
                 printf("|           Saliendo           |\n");
                 printf("-------------------------------\n");
+                guardarDatos("./data/sales.json", sales, totalSales);
+                break;
+            case 7:
+                printf("\n-------------------------------\n");
+                printf("|        Opcion oculta         |\n");
+                printf("-------------------------------\n");
+                mostrarDatosImportados(sales, totalSales);
                 break;
             default:
                 printf("\n-------------------------------\n");

@@ -1,9 +1,10 @@
 #include "headers.h"
 
 void parseFecha(const char *fecha, struct tm *tm) {
+    // Extrae año, mes y día de una cadena en formato "yyyy-mm-dd" y los asigna a la estructura tm.
     sscanf(fecha, "%4d-%2d-%2d", &tm->tm_year, &tm->tm_mon, &tm->tm_mday);
-    tm->tm_year -= 1900; // Ajustar año
-    tm->tm_mon -= 1; // Ajustar mes
+    tm->tm_year -= 1900; // Ajusta el año
+    tm->tm_mon -= 1; // Ajusta el mes
     tm->tm_hour = 0;
     tm->tm_min = 0;
     tm->tm_sec = 0;
@@ -11,10 +12,11 @@ void parseFecha(const char *fecha, struct tm *tm) {
 }
 
 void calcularVentasMensuales(Sale *sales, int totalSales, double *ventasMensuales) {
+    
     for (int i = 0; i < totalSales; i++) {
         struct tm tm = {0};
-        parseFecha(sales[i].fecha, &tm);
-        int mes = tm.tm_mon;
+        parseFecha(sales[i].fecha, &tm); // Convertir la fecha a una estructura tm
+        int mes = tm.tm_mon; // 0: Enero, 1: Febrero, ..., 11: Diciembre
         ventasMensuales[mes] += sales[i].total;
     }
 }
@@ -22,9 +24,9 @@ void calcularVentasMensuales(Sale *sales, int totalSales, double *ventasMensuale
 void calcularTransaccionesDiarias(Sale *sales, int totalSales, int *transaccionesDia) {
     for (int i = 0; i < totalSales; i++) {
         struct tm tm = {0};
-        parseFecha(sales[i].fecha, &tm);
+        parseFecha(sales[i].fecha, &tm); // Convertir la fecha a una estructura tm
         mktime(&tm); // Normalizar la estructura tm
-        int diaSemana = tm.tm_wday;
+        int diaSemana = tm.tm_wday; // 0: Domingo, 1: Lunes, ..., 6: Sábado
         transaccionesDia[diaSemana]++;
     }
 }
@@ -78,8 +80,8 @@ double calcularTasaCrecimiento(Sale *sales, int totalSales, int ano, int trimest
 
     double tasa = 0.0;
     if (trimestre > 1) {
-        double ventasPrevias = ventasTrimestre[trimestre - 2];
-        double ventasActuales = ventasTrimestre[trimestre - 1];
+        double ventasPrevias = ventasTrimestre[trimestre - 2]; // Ventas del trimestre anterior
+        double ventasActuales = ventasTrimestre[trimestre - 1]; // Ventas del trimestre actual
         if (ventasPrevias != 0) {
             tasa = ((ventasActuales - ventasPrevias) / ventasPrevias) * 100;
         }

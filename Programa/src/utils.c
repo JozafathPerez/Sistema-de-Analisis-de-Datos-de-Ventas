@@ -18,6 +18,7 @@ const char* obtenerNombreDia(int dia) {
 }
 
 void freeSales(Sale *sales, int totalSales) {
+    // Libera la memoria asignada dinámicamente para los nombres de productos y categorías.
     for (int i = 0; i < totalSales; i++) {
         free(sales[i].producto_nombre);
         free(sales[i].categoria);

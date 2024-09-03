@@ -21,6 +21,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include <time.h>
+#include <math.h>  // Para la función round(), solo para eso
 
 typedef struct {
     short int venta_id;
@@ -49,11 +50,55 @@ typedef struct {
     double totalVentas;
 } CategoriaTotal;
 
-
+/*****Nombre***************************************
+ * mostrarDatosImportados
+ *****Descripción**********************************
+* Muestra los datos de ventas importados almacenados en el arreglo `sales`. 
+* Imprime cada registro de venta con todos sus detalles.
+*
+ *****Retorno**************************************
+* Esta función no retorna ningún valor. Los datos de ventas se 
+* imprimen en la salida estándar.
+*
+ *****Entradas*************************************
+* - sales: Arreglo de estructuras `Sale` que contiene los datos de ventas.
+* - totalSales: Número total de ventas en el arreglo `sales`.
+**************************************************/
 void mostrarDatosImportados(Sale *sales, int totalSales);
 
+/*****Nombre***************************************
+ * leerArchivo
+ *****Descripción**********************************
+* Lee el contenido de un archivo especificado por `filename` 
+* y lo devuelve como una cadena de caracteres.
+*
+ *****Retorno**************************************
+* Retorna un puntero a una cadena de caracteres que contiene 
+* el contenido del archivo.
+*
+ *****Entradas*************************************
+* - filename: Nombre del archivo que se va a leer.
+**************************************************/
 char* leerArchivo(const char *filename);
 
+/*****Nombre***************************************
+ * parseJSON
+ *****Descripción**********************************
+* Analiza una cadena JSON que contiene datos de ventas y 
+* los convierte en un arreglo de estructuras `Sale`.
+*
+ *****Retorno**************************************
+* Esta función no retorna ningún valor. Los datos parseados se 
+* almacenan en el puntero `sales`, y el número total de ventas 
+* en `totalSales`.
+*
+ *****Entradas*************************************
+* - data: Cadena de caracteres que contiene los datos JSON.
+* - sales: Puntero a un arreglo de estructuras `Sale` donde se 
+*   almacenarán los datos parseados.
+* - totalSales: Puntero a un entero donde se almacenará el número 
+*   total de ventas parseadas.
+**************************************************/
 void parseJSON(const char *data, Sale **sales, int *totalSales);
 
 /*****Nombre***************************************
@@ -176,10 +221,53 @@ void procesarDatos(Sale *sales, int *totalSales);
 **************************************************/
 double totalVentas(Sale *sales, int totalSales);
 
+/*****Nombre***************************************
+ * agregarVenta
+ *****Descripción**********************************
+* Agrega una nueva venta al registro de ventas anuales. Si el año 
+* ya existe, suma la venta al mes correspondiente. Si no existe, 
+* se crea un nuevo registro de ventas para ese año.
+*
+ *****Retorno**************************************
+* Esta función no retorna ningún valor. Modifica el arreglo `ventasAnuales` 
+* para incluir la nueva venta.
+*
+ *****Entradas*************************************
+* - ventasAnuales: Puntero al arreglo de estructuras `VentasAnuales` 
+*   que contiene los registros de ventas anuales.
+* - totalAnos: Puntero al número total de años con registros de ventas.
+* - ano: Año de la venta que se está agregando.
+* - mes: Mes de la venta que se está agregando.
+* - total: Monto total de la venta que se está agregando.
+**************************************************/
 void agregarVenta(VentasAnuales **ventasAnuales, int *totalAnos, int ano, int mes, double total);
 
+/*****Nombre***************************************
+ * obtenerNombreMes
+ *****Descripción**********************************
+* Retorna el nombre del mes correspondiente a un número de mes dado.
+*
+ *****Retorno**************************************
+* Retorna un puntero a una cadena de caracteres que contiene 
+* el nombre del mes.
+*
+ *****Entradas*************************************
+* - mes: Número del mes (1-12) cuyo nombre se desea obtener.
+**************************************************/
 const char* obtenerNombreMes(int mes);
 
+/*****Nombre***************************************
+ * obtenerNombreDia
+ *****Descripción**********************************
+* Retorna el nombre del día correspondiente a un número de día dado.
+*
+ *****Retorno**************************************
+* Retorna un puntero a una cadena de caracteres que contiene 
+* el nombre del día.
+*
+ *****Entradas*************************************
+* - dia: Número del día de la semana (0-6) cuyo nombre se desea obtener.
+**************************************************/
 const char* obtenerNombreDia(int dia);
 
 /*****Nombre***************************************
@@ -281,5 +369,40 @@ void mostrarTop5Categorias(Sale *sales, int totalSales);
 * - totalSales: Número total de ventas a liberar.
 **************************************************/
 void freeSales(Sale *sales, int totalSales);
+
+/*****Nombre***************************************
+ * cargarDatos
+ *****Descripción**********************************
+* Carga los datos de ventas desde un archivo JSON especificado 
+* por `filename` y los almacena en un arreglo de estructuras `Sale`.
+*
+ *****Retorno**************************************
+* Retorna un puntero a un arreglo de estructuras `Sale` que contiene 
+* los datos de ventas cargados. El número total de ventas se almacena 
+* en `totalSales`.
+*
+ *****Entradas*************************************
+* - filename: Nombre del archivo JSON que contiene los datos de ventas.
+* - totalSales: Puntero a un entero donde se almacenará el número 
+*   total de ventas cargadas.
+**************************************************/
+Sale* cargarDatos(const char *filename, int *totalSales);
+
+/*****Nombre***************************************
+ * guardarDatos
+ *****Descripción**********************************
+* Guarda los datos de ventas almacenados en el arreglo `sales` 
+* en un archivo JSON especificado por `filename`.
+*
+ *****Retorno**************************************
+* Esta función no retorna ningún valor. Los datos de ventas se 
+* guardan en el archivo especificado.
+*
+ *****Entradas*************************************
+* - filename: Nombre del archivo donde se guardarán los datos de ventas.
+* - sales: Arreglo de estructuras `Sale` que contiene los datos de ventas.
+* - totalSales: Número total de ventas en el arreglo `sales`.
+**************************************************/
+void guardarDatos(const char *filename, Sale *sales, int totalSales);
 
 #endif

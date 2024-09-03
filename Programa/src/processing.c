@@ -4,23 +4,34 @@ void eliminarDuplicados(Sale *sales, int *totalSales) {
     int n = *totalSales;
     for (int i = 0; i < n; i++) {
         for (int j = i + 1; j < n;) {
-            if (sales[i].venta_id == sales[j].venta_id) {
-                printf("Duplicado encontrado: venta_id %d, eliminando registro duplicado.\n", sales[j].venta_id);
+            if (sales[i].venta_id == sales[j].venta_id && 
+                sales[i].producto_id == sales[j].producto_id && 
+                strcmp(sales[i].producto_nombre, sales[j].producto_nombre) == 0 && 
+                strcmp(sales[i].categoria, sales[j].categoria) == 0) {
+                
+                // Sumar las cantidades
+                sales[i].cantidad += sales[j].cantidad;
+                
+                // Sumar el total (asumiendo que el precio unitario es el mismo)
+                sales[i].total += sales[j].total;
+
+                printf("Duplicado encontrado y combinado: venta_id %d, producto_id %d\n", sales[i].venta_id, sales[i].producto_id);
+                
                 // Eliminar el duplicado desplazando los elementos hacia la izquierda
                 for (int k = j; k < n - 1; k++) {
                     sales[k] = sales[k + 1];
                 }
-                n--;
+                n--;  
             } else {
-                j++;
+                j++;  
             }
         }
     }
-    *totalSales = n;
+    *totalSales = n;  
 }
 
-// Funcion para calcular la moda de un array de valores enteros
 int calcularModa(int *valores, int cantidad) {
+    // Inicializar la moda y la frecuencia máxima
     int maxCount = 0;
     int moda = valores[0];
 
@@ -31,7 +42,7 @@ int calcularModa(int *valores, int cantidad) {
                 count++;
             }
         }
-
+        // Actualizar la moda si encontramos un valor con mayor frecuencia
         if (count > maxCount) {
             maxCount = count;
             moda = valores[i];
@@ -86,7 +97,7 @@ void completarDatos(Sale *sales, int totalSales) {
             printf("Precio unitario completado en venta_id %d con valor %.2f (media)\n", sales[i].venta_id, sales[i].precio_unitario);
         }
         // Actualizar el total de la linea
-        sales[i].total = sales[i].cantidad * sales[i].precio_unitario;
+        sales[i].total = round(sales[i].cantidad * sales[i].precio_unitario * 100) / 100.0;
     }
 
     free(cantidades);
@@ -100,11 +111,9 @@ void procesarDatos(Sale *sales, int *totalSales) {
         return;
     }
 
-    // Eliminar duplicados
     eliminarDuplicados(sales, totalSales);
-    printf("Datos duplicados eliminados. Total de ventas despues de la limpieza: %d\n", totalSales);
 
-    // Completar datos faltantes
     completarDatos(sales, *totalSales);
-    printf("Datos faltantes completados.\n");
+
+    printf("Proceso completado.\n");
 }

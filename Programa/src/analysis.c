@@ -1,13 +1,13 @@
 #include "headers.h"
 
 double totalVentas(Sale *sales, int totalSales) {
+    // Calcular el total de ventas sumando los importes de todas las transacciones
     double total = 0.0;
     for (int i = 0; i < totalSales; i++) {
         total += sales[i].total;
     }
     return total;
 }
-
 
 void agregarVenta(VentasAnuales **ventasAnuales, int *totalAnos, int ano, int mes, double total) {
     for (int i = 0; i < *totalAnos; i++) {

@@ -1,6 +1,7 @@
 #include "headers.h"
 
 int buscarCategoria(CategoriaTotal *categorias, int totalCategorias, const char *categoria) {
+    // Buscar la categoría en el arreglo de categorías
     for (int i = 0; i < totalCategorias; i++) {
         if (strcmp(categorias[i].categoria, categoria) == 0) {
             return i;
@@ -10,12 +11,14 @@ int buscarCategoria(CategoriaTotal *categorias, int totalCategorias, const char 
 }
 
 int compararCategorias(const void *a, const void *b) {
+    // Comparar dos categorías por ventas totales
     CategoriaTotal *catA = (CategoriaTotal *)a;
     CategoriaTotal *catB = (CategoriaTotal *)b;
     return (catB->totalVentas > catA->totalVentas) - (catB->totalVentas < catA->totalVentas);
 }
 
 void mostrarTop5Categorias(Sale *sales, int totalSales) {
+    // Crear un arreglo de estructuras CategoriaTotal para almacenar las ventas por categoría
     CategoriaTotal *categorias = malloc(totalSales * sizeof(CategoriaTotal));
     int totalCategorias = 0;
 

@@ -20,7 +20,6 @@ void mostrarDatosImportados(Sale *sales, int totalSales) {
     printf("+-----------+------------+-------------+----------------+---------------+----------+----------------+---------+\n");
 }
 
-// Función para leer el contenido del archivo JSON
 char* leerArchivo(const char *filename) {
     FILE *file = fopen(filename, "r");
     if (file == NULL) {
@@ -38,8 +37,8 @@ char* leerArchivo(const char *filename) {
     return data;
 }
 
-// Función para parsear el archivo JSON y llenar la estructura Sale
 void parseJSON(const char *data, Sale **sales, int *totalSales) {
+    // Parsear el archivo JSON
     cJSON *json = cJSON_Parse(data);
     if (!json) {
         printf("Error al parsear el archivo JSON.\n");
@@ -51,8 +50,9 @@ void parseJSON(const char *data, Sale **sales, int *totalSales) {
 
     for (int i = 0; i < count; i++) {
         cJSON *item = cJSON_GetArrayItem(json, i);
-        if (!item) continue; // Skip if item is NULL
+        if (!item) continue; 
 
+        // Extraer los campos del objeto JSON
         cJSON *venta_id = cJSON_GetObjectItem(item, "venta_id");
         cJSON *fecha = cJSON_GetObjectItem(item, "fecha");
         cJSON *producto_id = cJSON_GetObjectItem(item, "producto_id");
@@ -67,6 +67,7 @@ void parseJSON(const char *data, Sale **sales, int *totalSales) {
             continue;
         }
 
+        // Asignar los valores a la estructura Sale
         (*sales)[*totalSales].venta_id = (short int)venta_id->valueint;
         strcpy((*sales)[*totalSales].fecha, fecha->valuestring);
         (*sales)[*totalSales].producto_id = (short int)producto_id->valueint;
